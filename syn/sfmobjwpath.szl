@@ -1,0 +1,64 @@
+//SIZZLEX .gcp SFM Camera/Object Path
+@[
+
+// Export ground control points file. GCP transform.
+
+obj = Scene.activeObj
+shot = Scene.activeObj.cam.shot
+
+dlg = NewDialog("objwpath")
+dlg.Int("start", "First Frame", 0,  shot.start, 10000)
+dlg.Int("stop", "Last Frame", 0, shot.stop, 10000)
+dlg.Int("offset", "Frame Offset", -10000, 0, 10000)
+dlg.Path("fpath", "file name")
+dlg.Check("matchena", "Enable Frame# Matching", Scene.matchFrameNumbers)
+dlg.Float("wscl", "World Scaling", 0, 1.0, 1000000)
+dlg.StartRadio("axisMode", "Axis Mode")
+dlg.Radio("zup", "Z Up", axisMode == 0)
+dlg.Radio("yupr", "Y Up, Right", axisMode == 1)
+dlg.Radio("yupl", "Y Up, Left", axisMode == 2)
+dlg.StartRadio("rotOrder", "Rotation Order")
+dlg.Radio("xyz", "XYZ", rotOrder == 1)
+dlg.Radio("zxy", "ZXY", rotOrder == 0)
+dlg.StartRadio("chan", "Zoom Channel")
+dlg.Radio("none", "None", !obj.isCamera)
+dlg.Radio("fov", "Field of View", obj.isCamera)
+dlg.Radio("vfov", "Vertical FOV", 0)
+dlg.Radio("fl", "Focal Length", 0)
+dlg.Check("flipZ", "Look the other way", 0)
+dlg.Show()
+
+wscl = dlg.wscl
+if (dlg.yupl)
+    axisMode = 2
+elseif (dlg.yupr)
+    axisMode = 1
+else
+    axisMode = 0
+end
+rotOrder = dlg.xyz
+
+if (dlg.matchena)
+    foff = dlg.offset + shot.frameMatchOffset
+else
+    foff = dlg.offset
+end
+
+for (frame = dlg.start; frame <= dlg.stop; frame++)
+    xf = obj.trans
+    if (dlg.flipZ)
+	xf = RotY(180)*xf
+    end
+    printf("%s%d.jpg %1.3lf %1.3lf %1.3lf",
+	dlg.fpath, frame + foff, xf.x*wscl, xf.y*wscl, xf.z*wscl)
+    if (dlg.fov)
+	printf(" %8.3lf", obj.fov)
+    end
+    if (dlg.vfov)
+	printf(" %8.3lf", obj.vfov)
+    end
+    if (dlg.fl)
+	printf(" %8.3lf", obj.fl)
+    end
+    "\n"
+end
