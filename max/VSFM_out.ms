@@ -28,9 +28,9 @@ $.parent = sel
 --Vars
 --camAp = getRendApertureWidth()
 mycam = $ROTcamRead
-prefix =  "/leArc1_imgs/le_Arc_" 
+prefix =  "Set2\pic_ld\IMG_"
 fileext = ".jpg"
-frnm = 0-1
+frnm = 3997-1
 pxfl = renderWidth * ((fovToFocal camfov)as float/camAp)
 cmnum = cameracount()
 
@@ -48,7 +48,7 @@ for myrange in animationRange.start to animationRange.end do
 		frnm = frnm + 1;
 		camfov = sel.curFOV;
 		pxfl = renderWidth * ((fovToFocal camfov)as float/camAp);
-		format "%%%\t% % % % % % % % %\n" prefix (formattedPrint frnm format:"04d") fileext pxfl ((mycam.rotation.x) as string) ((mycam.rotation.w*1) as string) ((mycam.rotation.z*1) as string) ((mycam.rotation.y*-1) as string) ((mycam.pos.x) as string) ((mycam.pos.y) as string) ((mycam.pos.z) as string)"0 0 " to:out_file)
+		format "%%%\t% % % % % % % % %\n" prefix (formattedPrint frnm format:"02d") fileext pxfl ((mycam.rotation.x) as string) ((mycam.rotation.w*1) as string) ((mycam.rotation.z*1) as string) ((mycam.rotation.y*-1) as string) ((mycam.pos.x) as string) ((mycam.pos.y) as string) ((mycam.pos.z) as string)"0 0 " to:out_file)
 		
 format "\n0\n\n\n\n0\n\n\n\n0"  to:out_file
 		
